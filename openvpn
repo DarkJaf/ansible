@@ -1,0 +1,33 @@
+---
+- name: Install and Configure OpenVPN
+# in hosts write your group name like in inventory.ini
+  hosts: mygroup
+  become: true
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: true
+
+    - name: Install OpenVPN
+      apt:
+        name: openvpn
+        state: present
+      become: true
+
+    - name: Copy OpenVPN configuration files, in source write your ovpn config file path
+      copy:
+        src: /home/edo/vpn/ovpn.conf
+        dest: /etc/openvpn/
+        owner: root
+        group: root
+        mode: 0644
+      become: true
+
+    - name: Start and enable OpenVPN service
+      service:
+        name: openvpn
+        state: started
+        enabled: yes
+      become: true
